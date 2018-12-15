@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Intro to MapView - Create a 2D map - 4.9</title>
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.9/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.9/"></script>
+
+
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView"
+        ], function (Map, MapView) {
+
+            var map = new Map({
+                basemap: "streets"
+            });
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                zoom: 4,
+                center: [15, 65] // longitude, latitude
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="viewDiv">
+
+        <script>
+            var width = 300; //画布的宽度
+            var height = 300; //画布的高度
+
+            var svg = d3.select("#viewDiv")
+                .append("svg") //添加一个svg元素
+                .attr("width", width)
+                .attr("height", height);
+
+
+
+
+            var dataset = [250, 210, 170, 130, 90]; //数据（表示矩形的宽度）
+            var linear = d3.scale.linear()
+                .domain([0, d3.max(dataset)])
+                .range([0, 250]);
+            var rectHeight = 25; //每个矩形所占的像素高度(包括空白)
+
+            svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", 20)
+                .attr("y", function (d, i) {
+                    return i * rectHeight;
+                })
+                .attr("width", function (d) {
+                    return linear(d); //在这里用比例尺
+                })
+                .attr("height", rectHeight - 2)
+                .transition()
+                .delay(500)
+                .duration(1000)
+                .ease("bounce")
+                .attr("fill", "steelblue");
+        </script>
+
+    </div>
+
+
+</body>
+
+</html>
